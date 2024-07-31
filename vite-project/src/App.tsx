@@ -1,76 +1,59 @@
-import React from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from 'react';
 import './App.css'
 
-interface AppState {
-  count: number;
+interface HelloUsersProps {
+  names: string[];
 }
 
-class App extends React.Component<object, AppState> {
-  constructor(props: object) {
+interface HelloUsersState {
+  currentNameIndex: number;
+}
+
+class HelloUsers extends React.Component<HelloUsersProps, HelloUsersState> {
+  private interval: number | undefined;
+
+  constructor(props: HelloUsersProps) {
     super(props);
     this.state = {
-      count: 0,
+      currentNameIndex: 0,
     };
-    console.log('constructor');
-  }
-
-  componentWillMount() {
-    console.log('componentWillMount (deprecated)');
-  }
-
-  componentWillReceiveProps(nextProps: object) {
-    console.log('componentWillReceiveProps (deprecated)', nextProps);
-  }
-
-  componentWillUpdate(nextProps: object, nextState: AppState) {
-    console.log('componentWillUpdate (deprecated)', nextProps, nextState);
   }
 
   componentDidMount() {
     console.log('componentDidMount');
+    this.interval = window.setInterval(this.cycleNames, 5000);
   }
 
-  componentDidUpdate(prevProps: object, prevState: AppState, snapshot: null) {
-    console.log('componentDidUpdate', prevProps, prevState, snapshot);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  componentDidUpdate(prevProps: HelloUsersProps, prevState: HelloUsersState) {
+    console.log('componentDidUpdate');
   }
 
   componentWillUnmount() {
     console.log('componentWillUnmount');
+    if (this.interval !== undefined) {
+      clearInterval(this.interval);
+    }
   }
 
-  handleCountIncrease = () => {
-    this.setState((prevState) => ({ count: prevState.count + 1 }));
+  cycleNames = () => {
+    this.setState((prevState) => ({
+      currentNameIndex: (prevState.currentNameIndex + 1) % this.props.names.length,
+    }));
   };
 
   render() {
     console.log('render');
+    const { names } = this.props;
+    const { currentNameIndex } = this.state;
+    const name = names[currentNameIndex];
+
     return (
-      <>
-        <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button onClick={this.handleCountIncrease}>
-            count is {this.state.count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </>
+      <div>
+        <h1>Hello {name}!</h1>
+      </div>
     );
   }
 }
 
-export default App;
+export default HelloUsers;
