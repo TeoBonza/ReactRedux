@@ -12,8 +12,8 @@ interface TodoAppState {
   inputValue: string;
 }
 
-class TodoApp extends React.Component<Todo, TodoAppState> {
-  constructor(props: Todo) {
+class TodoApp extends React.Component<Record<string, never>, TodoAppState> {
+  constructor(props: Record<string, never>) {
     super(props);
     this.state = {
       todos: [],
@@ -28,7 +28,7 @@ class TodoApp extends React.Component<Todo, TodoAppState> {
     }
   }
 
-  componentDidUpdate(prevProps: Todo, prevState: TodoAppState) {
+  componentDidUpdate(_prevProps: Record<string, never>, prevState: TodoAppState) {
     if (prevState.todos !== this.state.todos) {
       localStorage.setItem('todos', JSON.stringify(this.state.todos));
     }
